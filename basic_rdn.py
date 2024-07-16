@@ -1,5 +1,14 @@
 import omni.replicator.core as rep
 
+def randomize_light_intensity(prim_path, min_intensity, max_intensity):
+    light = rep.get.prim_at_path(prim_path)
+    if light:
+        rep.modify.attribute(
+            prim=light,
+            attribute="intensity",
+            value=rep.distribution.uniform(min_intensity, max_intensity)
+        )
+
 with rep.new_layer():
     camera = rep.create.camera(position=(-4, 9, 1), look_at=(-5,30, 1))
     #camera = rep.create.camera(position=(-4, -9, 1), look_at=(-5,30, 1))
@@ -16,11 +25,11 @@ with rep.new_layer():
                 position=rep.distribution.uniform((-3, -14, .5), (-5, -16, .5)),
                 rotation=rep.distribution.uniform((0, 0, 0), (0, 0, 90)),
                 scale=rep.distribution.uniform(1, 1.5))
-    
+        randomize_light_intensity(light_prim_path, min_intensity=2000, max_intensity=4300)
     # Attach 2D tight bounding box annotator
     bbox_2d_tight = rep.AnnotatorRegistry.get_annotator("bounding_box_2d_tight")
     #sd.SyntheticData.Get().set_instance_mapping_semantic_filter("class:chair")
-    bbox_2d_tight.filter.prims = boxes
+    # bbox_2d_tight.filter.prims = boxes
     #bbox_2d_tight.filter.sem_type = "class"
     #bbox_2d_tight.filter.sem_data = "chair"
     bbox_2d_tight.attach(render_product)
